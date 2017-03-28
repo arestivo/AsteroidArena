@@ -65,7 +65,7 @@ public abstract class EntityModel {
      * @param x The x-coordinate of this entity in meters.
      * @param y The y-coordinate of this entity in meters.
      */
-    public void setPosition(float x, float y) {
+    void setPosition(float x, float y) {
         this.x = x;
         this.y = y;
     }
@@ -75,7 +75,7 @@ public abstract class EntityModel {
      *
      * @param rotation The current rotation of this entity in radians.
      */
-    public void setRotation(float rotation) {
+    void setRotation(float rotation) {
         this.rotation = rotation;
     }
 }
