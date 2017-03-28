@@ -2,7 +2,7 @@
 
 A simple Asteroid copycat game made using libGDX as an example for the LPOO classes.
 
-![](https://github.com/arestivo/SpaceArena/raw/master/images/screenshot.png)
+![](https://github.com/arestivo/SpaceArena/raw/sprites/images/screenshot.png)
 
 ## Game Art
 
