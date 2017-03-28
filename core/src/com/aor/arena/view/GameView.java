@@ -1,6 +1,7 @@
 package com.aor.arena.view;
 
 import com.aor.arena.AsteroidArena;
+import com.aor.arena.controller.GameController;
 import com.aor.arena.model.entities.AsteroidModel;
 import com.aor.arena.model.GameModel;
 import com.aor.arena.view.entities.BigAsteroidView;
@@ -12,9 +13,13 @@ import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.math.Matrix4;
+import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 
 import java.util.List;
 
+import static com.aor.arena.controller.GameController.ARENA_HEIGHT;
+import static com.aor.arena.controller.GameController.ARENA_WIDTH;
 
 /**
  * A view representing the game screen. Draws all the other views and
@@ -22,14 +27,9 @@ import java.util.List;
  */
 public class GameView extends ScreenAdapter {
     /**
-     * The arena width in meters
+     * Used to debug the position of the physics fixtures
      */
-    public static final int ARENA_WIDTH = 200;
-
-    /**
-     * The arena height in meters
-     */
-    public static final int ARENA_HEIGHT = 100;
+    private static final boolean DEBUG_PHYSICS = false;
 
     /**
      * How much meters does a pixel represent.
@@ -53,6 +53,11 @@ public class GameView extends ScreenAdapter {
     private final GameModel model;
 
     /**
+     * The physics controller for this game.
+     */
+    private final GameController controller;
+
+    /**
      * The camera used to show the viewport.
      */
     private final OrthographicCamera camera;
@@ -73,14 +78,28 @@ public class GameView extends ScreenAdapter {
     private final MediumAsteroidView mediumAsteroidView;
 
     /**
+     * A renderer used to debug the physical fixtures.
+     */
+    private Box2DDebugRenderer debugRenderer;
+
+    /**
+     * The transformation matrix used to transform meters into
+     * pixels in order to show fixtures in their correct places.
+     */
+    private Matrix4 debugCamera;
+
+
+    /**
      * Creates this screen.
      *
      * @param game The game this screen belongs to
      * @param model The model to be drawn
+     * @param controller The physics controller
      */
-    public GameView(AsteroidArena game, GameModel model) {
+    public GameView(AsteroidArena game, GameModel model, GameController controller) {
         this.game = game;
         this.model = model;
+        this.controller = controller;
 
         loadAssets();
 
@@ -101,6 +120,12 @@ public class GameView extends ScreenAdapter {
 
         camera.position.set(camera.viewportWidth / 2f, camera.viewportHeight / 2f, 0);
         camera.update();
+
+        if (DEBUG_PHYSICS) {
+            debugRenderer = new Box2DDebugRenderer();
+            debugCamera = camera.combined.cpy();
+            debugCamera.scl(1 / PIXEL_TO_METER);
+        }
 
         return camera;
     }
@@ -133,6 +158,8 @@ public class GameView extends ScreenAdapter {
     public void render(float delta) {
         handleInputs(delta);
 
+        controller.update(delta);
+
         camera.position.set(model.getShip().getX() / PIXEL_TO_METER, model.getShip().getY() / PIXEL_TO_METER, 0);
         camera.update();
         game.getBatch().setProjectionMatrix(camera.combined);
@@ -144,6 +171,12 @@ public class GameView extends ScreenAdapter {
         drawBackground();
         drawEntities();
         game.getBatch().end();
+
+        if (DEBUG_PHYSICS) {
+            debugCamera = camera.combined.cpy();
+            debugCamera.scl(1 / PIXEL_TO_METER);
+            debugRenderer.render(controller.getWorld(), debugCamera);
+        }
     }
 
     /**
@@ -153,13 +186,13 @@ public class GameView extends ScreenAdapter {
      */
     private void handleInputs(float delta) {
         if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
-            model.getShip().rotateLeft(delta);
+            controller.rotateLeft(delta);
         }
         if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
-            model.getShip().rotateRight(delta);
+            controller.rotateRight(delta);
         }
         if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
-            model.getShip().accelerate(delta);
+            controller.accelerate(delta);
         }
     }
 

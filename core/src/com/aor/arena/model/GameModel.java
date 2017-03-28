@@ -1,8 +1,8 @@
 package com.aor.arena.model;
 
+import com.aor.arena.controller.GameController;
 import com.aor.arena.model.entities.AsteroidModel;
 import com.aor.arena.model.entities.ShipModel;
-import com.aor.arena.view.GameView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,8 +38,8 @@ public class GameModel {
 
         for (int i = 0; i < asteroidCount; i++)
             asteroids.add(new AsteroidModel(
-                    random.nextFloat() * GameView.ARENA_WIDTH,
-                    random.nextFloat() * GameView.ARENA_HEIGHT,
+                    random.nextFloat() * GameController.ARENA_WIDTH,
+                    random.nextFloat() * GameController.ARENA_HEIGHT,
                     (float) Math.toRadians(random.nextFloat() * 360),
                     random.nextBoolean()?AsteroidModel.AsteroidSize.BIG:AsteroidModel.AsteroidSize.MEDIUM));
     }

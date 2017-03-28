@@ -1,5 +1,6 @@
 package com.aor.arena;
 
+import com.aor.arena.controller.GameController;
 import com.aor.arena.model.GameModel;
 import com.aor.arena.view.GameView;
 import com.badlogic.gdx.Game;
@@ -29,9 +30,9 @@ public class AsteroidArena extends Game {
      * Starts the game.
      */
     private void startGame() {
-        GameModel model = new GameModel(GameView.ARENA_WIDTH / 2, GameView.ARENA_HEIGHT / 2, 100);
+        GameModel model = new GameModel(GameController.ARENA_WIDTH / 2, GameController.ARENA_HEIGHT / 2, 100);
 
-        setScreen(new GameView(this, model));
+        setScreen(new GameView(this, model, new GameController(model)));
     }
 
     /**
