@@ -7,7 +7,7 @@ A simple Asteroid copycat game made using libGDX as an example for the LPOO clas
 ## Branches
 
 * [Sprites](https://github.com/arestivo/AsteroidArena/tree/sprites) Only model and view. 
-* [Physicss](https://github.com/arestivo/AsteroidArena/tree/physics) Model, view and controller (physics). If you need to use Box2D. 
+* [Physics](https://github.com/arestivo/AsteroidArena/tree/physics) Model, view and controller (physics). If you need to use Box2D. 
 
 
 ## Game Art
