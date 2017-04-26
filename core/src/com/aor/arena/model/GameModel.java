@@ -109,5 +109,12 @@ public class GameModel {
             bullets.remove(model);
             bulletPool.free((BulletModel) model);
         }
+        if (model instanceof AsteroidModel) {
+            asteroids.remove(model);
+        }
+    }
+
+    public void addAsteroid(AsteroidModel asteroidModel) {
+        asteroids.add(asteroidModel);
     }
 }

@@ -167,6 +167,7 @@ public class GameView extends ScreenAdapter {
     @Override
     public void render(float delta) {
         controller.removeFlagged();
+        controller.createNewAsteroids();
 
         handleInputs(delta);
 

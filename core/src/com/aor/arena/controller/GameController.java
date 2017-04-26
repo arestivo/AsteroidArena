@@ -69,6 +69,8 @@ public class GameController implements ContactListener {
      */
     private float accumulator;
 
+    private List<AsteroidModel> asteroidsToAdd = new ArrayList<AsteroidModel>();
+
     /**
      * Creates a new GameController that controls the physics of a certain GameModel.
      *
@@ -221,6 +223,29 @@ public class GameController implements ContactListener {
     }
 
     private void bulletAsteroidCollision(Body bulletBody, Body asteroidBody) {
+        AsteroidModel asteroidModel = (AsteroidModel) asteroidBody.getUserData();
+        asteroidModel.setFlaggedForRemoval(true);
+
+        if (asteroidModel.getSize() == AsteroidModel.AsteroidSize.BIG) {
+            AsteroidModel a1 = new AsteroidModel(asteroidModel.getX(), asteroidModel.getY(), asteroidModel.getRotation(), AsteroidModel.AsteroidSize.MEDIUM);
+            AsteroidModel a2 = new AsteroidModel(asteroidModel.getX(), asteroidModel.getY(), asteroidModel.getRotation(), AsteroidModel.AsteroidSize.MEDIUM);
+            AsteroidModel a3 = new AsteroidModel(asteroidModel.getX(), asteroidModel.getY(), asteroidModel.getRotation(), AsteroidModel.AsteroidSize.MEDIUM);
+
+            asteroidsToAdd.add(a1);
+            asteroidsToAdd.add(a2);
+            asteroidsToAdd.add(a3);
+        }
+    }
+
+    public void createNewAsteroids() {
+        for (AsteroidModel asteroidModel : asteroidsToAdd) {
+            model.addAsteroid(asteroidModel);
+            if (asteroidModel.getSize() == AsteroidModel.AsteroidSize.BIG)
+                new MediumAsteroidBody(world, asteroidModel);
+            if (asteroidModel.getSize() == AsteroidModel.AsteroidSize.MEDIUM)
+                new MediumAsteroidBody(world, asteroidModel);
+        }
+        asteroidsToAdd.clear();
     }
 
     /**
