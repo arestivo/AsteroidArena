@@ -32,7 +32,7 @@ public class BulletModel extends EntityModel{
      * Sets this bullet's time to live in seconds
      * @param timeToLive
      */
-    public void setTimeToLive(int timeToLive) {
+    public void setTimeToLive(float timeToLive) {
         this.timeToLive = timeToLive;
     }
 }

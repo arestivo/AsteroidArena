@@ -18,6 +18,16 @@ import static com.badlogic.gdx.math.MathUtils.random;
 
 public class GameModel {
     /**
+     * The singleton instance of the game model
+     */
+    private static GameModel instance;
+
+    /**
+     * Number of asteroids in the beggining of the game
+     */
+
+    private static final int ASTEROID_COUNT = 100;
+    /**
      * The space ship controlled by the user in this game.
      */
     private ShipModel ship;
@@ -43,19 +53,27 @@ public class GameModel {
     };
 
     /**
-     * Constructs a game with a.space ship in a certain position and
-     * a certain number of asteroids in different sizes.
+     * Returns a singleton instance of the game model
      *
-     * @param x the x-coordinate of the space ship in meters
-     * @param y the y-coordinate of the space ship in meters
-     * @param asteroidCount The number of asteroids to create
+     * @return the singleton instance
      */
-    public GameModel(float x, float y, int asteroidCount) {
+    public static GameModel getInstance() {
+        if (instance == null)
+            instance = new GameModel();
+        return instance;
+    }
+
+
+    /**
+     * Constructs a game with a.space ship in the middle of the
+     * arena and a certain number of asteroids in different sizes.
+     */
+    private GameModel() {
         asteroids = new ArrayList<AsteroidModel>();
         bullets = new ArrayList<BulletModel>();
-        ship = new ShipModel(x, y, 0);
+        ship = new ShipModel(GameController.ARENA_WIDTH / 2, GameController.ARENA_HEIGHT / 2, 0);
 
-        for (int i = 0; i < asteroidCount; i++)
+        for (int i = 0; i < ASTEROID_COUNT; i++)
             asteroids.add(new AsteroidModel(
                     random.nextFloat() * GameController.ARENA_WIDTH,
                     random.nextFloat() * GameController.ARENA_HEIGHT,
@@ -92,11 +110,14 @@ public class GameModel {
 
     public BulletModel createBullet(ShipModel ship) {
         BulletModel bullet = bulletPool.obtain();
+
         bullet.setFlaggedForRemoval(false);
         bullet.setPosition(ship.getX() - (float)(Math.sin(ship.getRotation()) * 1.4), ship.getY() + (float)(Math.cos(ship.getRotation()) * 1.4));
         bullet.setRotation(ship.getRotation());
-        bullet.setTimeToLive(1);
+        bullet.setTimeToLive(.5f);
+
         bullets.add(bullet);
+
         return bullet;
     }
 

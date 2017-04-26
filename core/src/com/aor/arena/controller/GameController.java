@@ -31,6 +31,11 @@ import static java.lang.Math.sin;
 
 public class GameController implements ContactListener {
     /**
+     * The singleton instance of this controller
+     */
+    private static GameController instance;
+
+    /**
      * The arena width in meters.
      */
     public static final int ARENA_WIDTH = 100;
@@ -53,7 +58,7 @@ public class GameController implements ContactListener {
     /**
      * The speed of bullets
      */
-    private static final float BULLET_SPEED = 10f;
+    private static final float BULLET_SPEED = 30f;
 
     /**
      * The number of fragments an asteroid breaks into
@@ -76,11 +81,6 @@ public class GameController implements ContactListener {
     private final ShipBody shipBody;
 
     /**
-     * The game model.
-     */
-    private final GameModel model;
-
-    /**
      * Accumulator used to calculate the simulation step.
      */
     private float accumulator;
@@ -98,15 +98,13 @@ public class GameController implements ContactListener {
     /**
      * Creates a new GameController that controls the physics of a certain GameModel.
      *
-     * @param model The model controlled by this controller.
      */
-    public GameController(GameModel model) {
+    private GameController() {
         world = new World(new Vector2(0, 0), true);
-        this.model = model;
 
-        shipBody = new ShipBody(world, model.getShip());
+        shipBody = new ShipBody(world, GameModel.getInstance().getShip());
 
-        List<AsteroidModel> asteroids = model.getAsteroids();
+        List<AsteroidModel> asteroids = GameModel.getInstance().getAsteroids();
         for (AsteroidModel asteroid : asteroids)
         if (asteroid.getSize() == AsteroidModel.AsteroidSize.BIG)
             new BigAsteroidBody(world, asteroid);
@@ -117,12 +115,23 @@ public class GameController implements ContactListener {
     }
 
     /**
+     * Returns a singleton instance of a game controller
+     *
+     * @return the singleton instance
+     */
+    public static GameController getInstance() {
+        if (instance == null)
+            instance = new GameController();
+        return instance;
+    }
+
+    /**
      * Calculates the next physics step of duration delta (in seconds).
      *
      * @param delta The size of this physics step in seconds.
      */
     public void update(float delta) {
-        model.update(delta);
+        GameModel.getInstance().update(delta);
 
         timeToNextShoot -= delta;
 
@@ -212,7 +221,7 @@ public class GameController implements ContactListener {
      */
     public void shoot() {
         if (timeToNextShoot < 0) {
-            BulletModel bullet = model.createBullet(model.getShip());
+            BulletModel bullet = GameModel.getInstance().createBullet(GameModel.getInstance().getShip());
             BulletBody body = new BulletBody(world, bullet);
             body.setLinearVelocity(BULLET_SPEED);
             timeToNextShoot = TIME_BETWEEN_SHOTS;
@@ -287,7 +296,7 @@ public class GameController implements ContactListener {
      */
     public void createNewAsteroids() {
         for (AsteroidModel asteroidModel : asteroidsToAdd) {
-            model.addAsteroid(asteroidModel);
+            GameModel.getInstance().addAsteroid(asteroidModel);
             if (asteroidModel.getSize() == AsteroidModel.AsteroidSize.MEDIUM) {
                 MediumAsteroidBody body = new MediumAsteroidBody(world, asteroidModel);
                 body.setLinearVelocity((float) (Math.random() * 5));
@@ -305,7 +314,7 @@ public class GameController implements ContactListener {
         world.getBodies(bodies);
         for (Body body : bodies) {
             if (((EntityModel)body.getUserData()).isFlaggedToBeRemoved()) {
-                model.remove((EntityModel) body.getUserData());
+                GameModel.getInstance().remove((EntityModel) body.getUserData());
                 world.destroyBody(body);
             }
         }

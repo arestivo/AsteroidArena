@@ -30,9 +30,7 @@ public class AsteroidArena extends Game {
      * Starts the game.
      */
     private void startGame() {
-        GameModel model = new GameModel(GameController.ARENA_WIDTH / 2, GameController.ARENA_HEIGHT / 2, 100);
-
-        setScreen(new GameView(this, model, new GameController(model)));
+        setScreen(new GameView(this));
     }
 
     /**

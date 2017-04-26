@@ -50,16 +50,6 @@ public class GameView extends ScreenAdapter {
     private final AsteroidArena game;
 
     /**
-     * The model drawn by this screen.
-     */
-    private final GameModel model;
-
-    /**
-     * The physics controller for this game.
-     */
-    private final GameController controller;
-
-    /**
      * The camera used to show the viewport.
      */
     private final OrthographicCamera camera;
@@ -95,18 +85,13 @@ public class GameView extends ScreenAdapter {
      */
     private Matrix4 debugCamera;
 
-
     /**
      * Creates this screen.
      *
      * @param game The game this screen belongs to
-     * @param model The model to be drawn
-     * @param controller The physics controller
      */
-    public GameView(AsteroidArena game, GameModel model, GameController controller) {
+    public GameView(AsteroidArena game) {
         this.game = game;
-        this.model = model;
-        this.controller = controller;
 
         loadAssets();
 
@@ -166,14 +151,14 @@ public class GameView extends ScreenAdapter {
      */
     @Override
     public void render(float delta) {
-        controller.removeFlagged();
-        controller.createNewAsteroids();
+        GameController.getInstance().removeFlagged();
+        GameController.getInstance().createNewAsteroids();
 
         handleInputs(delta);
 
-        controller.update(delta);
+        GameController.getInstance().update(delta);
 
-        camera.position.set(model.getShip().getX() / PIXEL_TO_METER, model.getShip().getY() / PIXEL_TO_METER, 0);
+        camera.position.set(GameModel.getInstance().getShip().getX() / PIXEL_TO_METER, GameModel.getInstance().getShip().getY() / PIXEL_TO_METER, 0);
         camera.update();
         game.getBatch().setProjectionMatrix(camera.combined);
 
@@ -188,7 +173,7 @@ public class GameView extends ScreenAdapter {
         if (DEBUG_PHYSICS) {
             debugCamera = camera.combined.cpy();
             debugCamera.scl(1 / PIXEL_TO_METER);
-            debugRenderer.render(controller.getWorld(), debugCamera);
+            debugRenderer.render(GameController.getInstance().getWorld(), debugCamera);
         }
     }
 
@@ -199,16 +184,16 @@ public class GameView extends ScreenAdapter {
      */
     private void handleInputs(float delta) {
         if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
-            controller.rotateLeft(delta);
+            GameController.getInstance().rotateLeft(delta);
         }
         if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
-            controller.rotateRight(delta);
+            GameController.getInstance().rotateRight(delta);
         }
         if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
-            controller.accelerate(delta);
+            GameController.getInstance().accelerate(delta);
         }
         if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
-            controller.shoot();
+            GameController.getInstance().shoot();
         }
     }
 
@@ -216,7 +201,7 @@ public class GameView extends ScreenAdapter {
      * Draws the entities to the screen.
      */
     private void drawEntities() {
-        List<AsteroidModel> asteroids = model.getAsteroids();
+        List<AsteroidModel> asteroids = GameModel.getInstance().getAsteroids();
         for (AsteroidModel asteroid : asteroids) {
             if (asteroid.getSize() == AsteroidModel.AsteroidSize.BIG) {
                 bigAsteroidView.update(asteroid);
@@ -227,13 +212,13 @@ public class GameView extends ScreenAdapter {
             }
         }
 
-        List<BulletModel> bullets = model.getBullets();
+        List<BulletModel> bullets = GameModel.getInstance().getBullets();
         for (BulletModel bullet : bullets) {
             bulletView.update(bullet);
             bulletView.draw(game.getBatch());
         }
 
-        shipView.update(model.getShip());
+        shipView.update(GameModel.getInstance().getShip());
         shipView.draw(game.getBatch());
     }
 
