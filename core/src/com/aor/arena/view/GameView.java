@@ -166,6 +166,8 @@ public class GameView extends ScreenAdapter {
      */
     @Override
     public void render(float delta) {
+        controller.removeFlagged();
+
         handleInputs(delta);
 
         controller.update(delta);
@@ -205,7 +207,7 @@ public class GameView extends ScreenAdapter {
             controller.accelerate(delta);
         }
         else if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
-            controller.shoot(model);
+            controller.shoot();
         }
     }
 

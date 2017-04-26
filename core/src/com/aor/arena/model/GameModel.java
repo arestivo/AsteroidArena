@@ -3,6 +3,7 @@ package com.aor.arena.model;
 import com.aor.arena.controller.GameController;
 import com.aor.arena.model.entities.AsteroidModel;
 import com.aor.arena.model.entities.BulletModel;
+import com.aor.arena.model.entities.EntityModel;
 import com.aor.arena.model.entities.ShipModel;
 
 import java.util.ArrayList;
@@ -75,8 +76,18 @@ public class GameModel {
     }
 
     public BulletModel createBullet(ShipModel ship) {
-        BulletModel bullet = new BulletModel(ship.getX() - (float)(Math.sin(ship.getRotation())), ship.getY() + (float)(Math.cos(ship.getRotation())), ship.getRotation());
+        BulletModel bullet = new BulletModel(ship.getX() - (float)(Math.sin(ship.getRotation()) * 1.4), ship.getY() + (float)(Math.cos(ship.getRotation()) * 1.4), ship.getRotation());
         bullets.add(bullet);
         return bullet;
+    }
+
+    /**
+     * Removes a model from this game.
+     *
+     * @param model the model to be removed
+     */
+    public void remove(EntityModel model) {
+        if (model instanceof BulletModel)
+            bullets.remove(model);
     }
 }

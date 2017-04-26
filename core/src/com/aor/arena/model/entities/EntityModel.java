@@ -20,6 +20,11 @@ public abstract class EntityModel {
     private float rotation;
 
     /**
+     * Has this model been flagged for removal?
+     */
+    private boolean flaggedForRemoval = false;
+
+    /**
      * Constructs a model with a position and a rotation.
      *
      * @param x The x-coordinate of this entity in meters.
@@ -77,5 +82,16 @@ public abstract class EntityModel {
      */
     public void setRotation(float rotation) {
         this.rotation = rotation;
+    }
+
+    /**
+     * Makes this model flagged for removal on next step
+     */
+    public void flagForRemoval() {
+        this.flaggedForRemoval = true;
+    };
+
+    public boolean isFlaggedToBeRemoved() {
+        return flaggedForRemoval;
     }
 }

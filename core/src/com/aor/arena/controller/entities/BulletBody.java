@@ -23,6 +23,6 @@ public class BulletBody extends EntityBody {
 
         createFixture(body, new float[]{
                 5,5, 5,10, 10,10, 10,5,
-        }, width, height, density, friction, restitution);
+        }, width, height, density, friction, restitution, BULLET_BODY, (short) (ASTEROID_BODY | SHIP_BODY));
     }
 }

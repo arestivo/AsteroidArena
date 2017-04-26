@@ -22,6 +22,6 @@ public class MediumAsteroidBody extends EntityBody {
 
         createFixture(body, new float[]{
                 0,23, 3,2, 27,2, 34,18, 17,33
-        }, width, height, density, friction, restitution);
+        }, width, height, density, friction, restitution, ASTEROID_BODY, (short) (ASTEROID_BODY | SHIP_BODY | BULLET_BODY));
     }
 }

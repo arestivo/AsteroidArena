@@ -23,10 +23,10 @@ public class BigAsteroidBody extends EntityBody {
         // Fixture needs to be convex so we need two of them.
         createFixture(body, new float[]{
                 0,33, 14,14, 46,7, 27,52, 7,52
-        }, width, height, density, friction, restitution);
+        }, width, height, density, friction, restitution, ASTEROID_BODY, (short) (ASTEROID_BODY | SHIP_BODY | BULLET_BODY));
 
         createFixture(body, new float[]{
                 46,7, 27,52, 45,67, 74,55, 71,29
-        }, width, height, density, friction, restitution);
+        }, width, height, density, friction, restitution, ASTEROID_BODY, (short) (ASTEROID_BODY | SHIP_BODY | BULLET_BODY));
     }
 }

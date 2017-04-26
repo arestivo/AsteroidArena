@@ -11,9 +11,14 @@ import com.aor.arena.model.entities.EntityModel;
 import com.aor.arena.model.entities.ShipModel;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.Contact;
+import com.badlogic.gdx.physics.box2d.ContactImpulse;
+import com.badlogic.gdx.physics.box2d.ContactListener;
+import com.badlogic.gdx.physics.box2d.Manifold;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static java.lang.Math.cos;
@@ -23,7 +28,7 @@ import static java.lang.Math.sin;
  * Controls the physics aspect of the game.
  */
 
-public class GameController {
+public class GameController implements ContactListener {
     /**
      * The arena width in meters.
      */
@@ -55,6 +60,11 @@ public class GameController {
     private final ShipBody shipBody;
 
     /**
+     * The game model.
+     */
+    private final GameModel model;
+
+    /**
      * Accumulator used to calculate the simulation step.
      */
     private float accumulator;
@@ -66,6 +76,7 @@ public class GameController {
      */
     public GameController(GameModel model) {
         world = new World(new Vector2(0, 0), true);
+        this.model = model;
 
         shipBody = new ShipBody(world, model.getShip());
 
@@ -75,6 +86,8 @@ public class GameController {
             new BigAsteroidBody(world, asteroid);
         else if (asteroid.getSize() == AsteroidModel.AsteroidSize.MEDIUM)
             new MediumAsteroidBody(world, asteroid);
+
+        world.setContactListener(this);
     }
 
     /**
@@ -154,7 +167,7 @@ public class GameController {
     }
 
     /**
-     * Accelerates the spaceship. The acceleration takes into consideration the
+     * Acceleratesins the spaceship. The acceleration takes into consideration the
      * constant acceleration force and the delta for this simulation step.
      *
      * @param delta Duration of the rotation in seconds.
@@ -165,9 +178,66 @@ public class GameController {
         ((ShipModel)shipBody.getUserData()).setAccelerating(true);
     }
 
-    public void shoot(GameModel model) {
+    public void shoot() {
         BulletModel bullet = model.createBullet(model.getShip());
         BulletBody body = new BulletBody(world, bullet);
         body.setLinearVelocity(10);
     }
+
+    @Override
+    public void beginContact(Contact contact) {
+        Body bodyA = contact.getFixtureA().getBody();
+        Body bodyB = contact.getFixtureB().getBody();
+
+        if (bodyA.getUserData() instanceof BulletModel)
+            bulletCollision(bodyA);
+        if (bodyB.getUserData() instanceof BulletModel)
+            bulletCollision(bodyB);
+
+        if (bodyA.getUserData() instanceof BulletModel && bodyB.getUserData() instanceof AsteroidModel)
+            bulletAsteroidCollision(bodyA, bodyB);
+        if (bodyA.getUserData() instanceof AsteroidModel && bodyB.getUserData() instanceof BulletModel)
+            bulletAsteroidCollision(bodyB, bodyA);
+
+    }
+
+    @Override
+    public void endContact(Contact contact) {
+
+    }
+
+    @Override
+    public void preSolve(Contact contact, Manifold oldManifold) {
+
+    }
+
+    @Override
+    public void postSolve(Contact contact, ContactImpulse impulse) {
+
+    }
+
+    private void bulletCollision(Body bulletBody) {
+        ((BulletModel)bulletBody.getUserData()).flagForRemoval();
+    }
+
+    private void bulletAsteroidCollision(Body bulletBody, Body asteroidBody) {
+    }
+
+    /**
+     * Removes objects that have been flagged for removal on the
+     * previous step.
+     */
+    public void removeFlagged() {
+        Array<Body> bodies = new Array<Body>();
+        world.getBodies(bodies);
+        for (Body body : bodies) {
+            if (((EntityModel)body.getUserData()).isFlaggedToBeRemoved()) {
+                model.remove((EntityModel) body.getUserData());
+                world.destroyBody(body);
+            }
+        }
+    }
+
+
 }
+
