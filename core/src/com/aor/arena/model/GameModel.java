@@ -2,6 +2,7 @@ package com.aor.arena.model;
 
 import com.aor.arena.controller.GameController;
 import com.aor.arena.model.entities.AsteroidModel;
+import com.aor.arena.model.entities.BulletModel;
 import com.aor.arena.model.entities.ShipModel;
 
 import java.util.ArrayList;
@@ -23,6 +24,7 @@ public class GameModel {
      * The asteroids roaming around in this game.
      */
     private List<AsteroidModel> asteroids;
+    private List<BulletModel> bullets;
 
     /**
      * Constructs a game with a.space ship in a certain position and
@@ -34,6 +36,7 @@ public class GameModel {
      */
     public GameModel(float x, float y, int asteroidCount) {
         asteroids = new ArrayList<AsteroidModel>();
+        bullets = new ArrayList<BulletModel>();
         ship = new ShipModel(x, y, 0);
 
         for (int i = 0; i < asteroidCount; i++)
@@ -60,5 +63,20 @@ public class GameModel {
      */
     public List<AsteroidModel> getAsteroids() {
         return asteroids;
+    }
+
+    /**
+     * Returns the bullets.
+     *
+     * @return the bullet list
+     */
+    public List<BulletModel> getBullets() {
+        return bullets;
+    }
+
+    public BulletModel createBullet(ShipModel ship) {
+        BulletModel bullet = new BulletModel(ship.getX() - (float)(Math.sin(ship.getRotation())), ship.getY() + (float)(Math.cos(ship.getRotation())), ship.getRotation());
+        bullets.add(bullet);
+        return bullet;
     }
 }

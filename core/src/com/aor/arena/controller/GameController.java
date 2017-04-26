@@ -1,10 +1,12 @@
 package com.aor.arena.controller;
 
 import com.aor.arena.controller.entities.BigAsteroidBody;
+import com.aor.arena.controller.entities.BulletBody;
 import com.aor.arena.controller.entities.MediumAsteroidBody;
 import com.aor.arena.controller.entities.ShipBody;
 import com.aor.arena.model.GameModel;
 import com.aor.arena.model.entities.AsteroidModel;
+import com.aor.arena.model.entities.BulletModel;
 import com.aor.arena.model.entities.EntityModel;
 import com.aor.arena.model.entities.ShipModel;
 import com.badlogic.gdx.math.Vector2;
@@ -163,4 +165,7 @@ public class GameController {
         ((ShipModel)shipBody.getUserData()).setAccelerating(true);
     }
 
+    public void shoot(BulletModel bullet) {
+        new BulletBody(world, bullet);
+    }
 }

@@ -4,7 +4,9 @@ import com.aor.arena.AsteroidArena;
 import com.aor.arena.controller.GameController;
 import com.aor.arena.model.entities.AsteroidModel;
 import com.aor.arena.model.GameModel;
+import com.aor.arena.model.entities.BulletModel;
 import com.aor.arena.view.entities.BigAsteroidView;
+import com.aor.arena.view.entities.BulletView;
 import com.aor.arena.view.entities.MediumAsteroidView;
 import com.aor.arena.view.entities.ShipView;
 import com.badlogic.gdx.Gdx;
@@ -78,6 +80,11 @@ public class GameView extends ScreenAdapter {
     private final MediumAsteroidView mediumAsteroidView;
 
     /**
+     * A bullet view used to draw bullets.
+     */
+    private final BulletView bulletView;
+
+    /**
      * A renderer used to debug the physical fixtures.
      */
     private Box2DDebugRenderer debugRenderer;
@@ -106,6 +113,7 @@ public class GameView extends ScreenAdapter {
         shipView = new ShipView(game);
         bigAsteroidView = new BigAsteroidView(game);
         mediumAsteroidView = new MediumAsteroidView(game);
+        bulletView = new BulletView(game);
 
         camera = createCamera();
     }
@@ -139,6 +147,8 @@ public class GameView extends ScreenAdapter {
 
         this.game.getAssetManager().load( "asteroid-big.png" , Texture.class);
         this.game.getAssetManager().load( "asteroid-medium.png" , Texture.class);
+
+        this.game.getAssetManager().load( "bullet.png" , Texture.class);
 
         this.game.getAssetManager().load( "background.png" , Texture.class);
 
@@ -188,11 +198,15 @@ public class GameView extends ScreenAdapter {
         if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
             controller.rotateLeft(delta);
         }
-        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
+        else if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
             controller.rotateRight(delta);
         }
-        if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
+        else if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
             controller.accelerate(delta);
+        }
+        else if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
+            BulletModel bullet = model.createBullet(model.getShip());
+            controller.shoot(bullet);
         }
     }
 
@@ -209,6 +223,12 @@ public class GameView extends ScreenAdapter {
                 mediumAsteroidView.update(asteroid);
                 mediumAsteroidView.draw(game.getBatch());
             }
+        }
+
+        List<BulletModel> bullets = model.getBullets();
+        for (BulletModel bullet : bullets) {
+            bulletView.update(bullet);
+            bulletView.draw(game.getBatch());
         }
 
         shipView.update(model.getShip());
