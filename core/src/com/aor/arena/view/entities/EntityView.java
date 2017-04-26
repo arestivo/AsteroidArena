@@ -13,7 +13,7 @@ import static com.aor.arena.view.GameView.PIXEL_TO_METER;
  *
  * This view is able to update its data based on a entity model.
  */
-abstract class EntityView {
+public abstract class EntityView {
     /**
      * The sprite representing this entity view.
      */

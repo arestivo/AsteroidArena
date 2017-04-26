@@ -7,8 +7,10 @@ import com.aor.arena.model.GameModel;
 import com.aor.arena.model.entities.BulletModel;
 import com.aor.arena.view.entities.BigAsteroidView;
 import com.aor.arena.view.entities.BulletView;
+import com.aor.arena.view.entities.EntityView;
 import com.aor.arena.view.entities.MediumAsteroidView;
 import com.aor.arena.view.entities.ShipView;
+import com.aor.arena.view.entities.ViewFactory;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.ScreenAdapter;
@@ -55,26 +57,6 @@ public class GameView extends ScreenAdapter {
     private final OrthographicCamera camera;
 
     /**
-     * A ship view used to draw ships.
-     */
-    private final ShipView shipView;
-
-    /**
-     * A big asteroid view used to draw big asteroids.
-     */
-    private final BigAsteroidView bigAsteroidView;
-
-    /**
-     * A medium asteroid view used to draw medium asteroids.
-     */
-    private final MediumAsteroidView mediumAsteroidView;
-
-    /**
-     * A bullet view used to draw bullets.
-     */
-    private final BulletView bulletView;
-
-    /**
      * A renderer used to debug the physical fixtures.
      */
     private Box2DDebugRenderer debugRenderer;
@@ -94,11 +76,6 @@ public class GameView extends ScreenAdapter {
         this.game = game;
 
         loadAssets();
-
-        shipView = new ShipView(game);
-        bigAsteroidView = new BigAsteroidView(game);
-        mediumAsteroidView = new MediumAsteroidView(game);
-        bulletView = new BulletView(game);
 
         camera = createCamera();
     }
@@ -204,22 +181,26 @@ public class GameView extends ScreenAdapter {
         List<AsteroidModel> asteroids = GameModel.getInstance().getAsteroids();
         for (AsteroidModel asteroid : asteroids) {
             if (asteroid.getSize() == AsteroidModel.AsteroidSize.BIG) {
-                bigAsteroidView.update(asteroid);
-                bigAsteroidView.draw(game.getBatch());
+                EntityView view = ViewFactory.makeView(game, ViewFactory.ViewType.BIGASTEROID);
+                view.update(asteroid);
+                view.draw(game.getBatch());
             } else if (asteroid.getSize() == AsteroidModel.AsteroidSize.MEDIUM) {
-                mediumAsteroidView.update(asteroid);
-                mediumAsteroidView.draw(game.getBatch());
+                EntityView view = ViewFactory.makeView(game, ViewFactory.ViewType.MEDIUMASTEROID);
+                view.update(asteroid);
+                view.draw(game.getBatch());
             }
         }
 
         List<BulletModel> bullets = GameModel.getInstance().getBullets();
         for (BulletModel bullet : bullets) {
-            bulletView.update(bullet);
-            bulletView.draw(game.getBatch());
+            EntityView view = ViewFactory.makeView(game, ViewFactory.ViewType.BULLET);
+            view.update(bullet);
+            view.draw(game.getBatch());
         }
 
-        shipView.update(GameModel.getInstance().getShip());
-        shipView.draw(game.getBatch());
+        EntityView view = ViewFactory.makeView(game, ViewFactory.ViewType.SHIP);
+        view.update(GameModel.getInstance().getShip());
+        view.draw(game.getBatch());
     }
 
     /**
