@@ -277,8 +277,8 @@ public class GameController implements ContactListener {
     /**
      * A bullet collided with an asteroid. Lets remove the asteroids and break into
      * pieces if needed.
-     * @param bulletBody
-     * @param asteroidBody
+     * @param bulletBody the bullet that collided
+     * @param asteroidBody the asteroid that collided
      */
     private void bulletAsteroidCollision(Body bulletBody, Body asteroidBody) {
         AsteroidModel asteroidModel = (AsteroidModel) asteroidBody.getUserData();
