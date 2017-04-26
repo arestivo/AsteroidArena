@@ -61,6 +61,11 @@ public class GameController implements ContactListener {
     private static final int FRAGMENT_COUNT = 5;
 
     /**
+     * Minimum time between consecutive shots in seconds
+     */
+    private static final float TIME_BETWEEN_SHOTS = .2f;
+
+    /**
      * The physics world controlled by this controller.
      */
     private final World world;
@@ -84,6 +89,11 @@ public class GameController implements ContactListener {
      * Asteroids that should be added in the next simulation step.
      */
     private List<AsteroidModel> asteroidsToAdd = new ArrayList<AsteroidModel>();
+
+    /**
+     * Time left until gun cools down
+     */
+    private float timeToNextShoot;
 
     /**
      * Creates a new GameController that controls the physics of a certain GameModel.
@@ -113,6 +123,8 @@ public class GameController implements ContactListener {
      */
     public void update(float delta) {
         model.update(delta);
+
+        timeToNextShoot -= delta;
 
         float frameTime = Math.min(delta, 0.25f);
         accumulator += frameTime;
@@ -199,9 +211,12 @@ public class GameController implements ContactListener {
      * Shoots a bullet from the spaceship at 10m/s
      */
     public void shoot() {
-        BulletModel bullet = model.createBullet(model.getShip());
-        BulletBody body = new BulletBody(world, bullet);
-        body.setLinearVelocity(BULLET_SPEED);
+        if (timeToNextShoot < 0) {
+            BulletModel bullet = model.createBullet(model.getShip());
+            BulletBody body = new BulletBody(world, bullet);
+            body.setLinearVelocity(BULLET_SPEED);
+            timeToNextShoot = TIME_BETWEEN_SHOTS;
+        }
     }
 
     /**
