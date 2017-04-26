@@ -69,6 +69,9 @@ public class GameController implements ContactListener {
      */
     private float accumulator;
 
+    /**
+     * Asteroids that should be added in the next simulation step.
+     */
     private List<AsteroidModel> asteroidsToAdd = new ArrayList<AsteroidModel>();
 
     /**
@@ -174,18 +177,25 @@ public class GameController implements ContactListener {
      *
      * @param delta Duration of the rotation in seconds.
      */
-
     public void accelerate(float delta) {
         shipBody.applyForceToCenter(-(float) sin(shipBody.getAngle()) * ACCELERATION_FORCE * delta, (float) cos(shipBody.getAngle()) * ACCELERATION_FORCE * delta, true);
         ((ShipModel)shipBody.getUserData()).setAccelerating(true);
     }
 
+    /**
+     * Shoots a bullet from the spaceship at 10m/s
+     */
     public void shoot() {
         BulletModel bullet = model.createBullet(model.getShip());
         BulletBody body = new BulletBody(world, bullet);
         body.setLinearVelocity(10);
     }
 
+    /**
+     * A contact between two objects was detected
+     *
+     * @param contact the detected contact
+     */
     @Override
     public void beginContact(Contact contact) {
         Body bodyA = contact.getFixtureA().getBody();
@@ -218,25 +228,35 @@ public class GameController implements ContactListener {
 
     }
 
+    /**
+     * A bullet colided with something. Lets remove it.
+     *
+     * @param bulletBody the bullet that colided
+     */
     private void bulletCollision(Body bulletBody) {
         ((BulletModel)bulletBody.getUserData()).setFlaggedForRemoval(true);
     }
 
+    /**
+     * A bullet collided with an asteroid. Lets remove the asteroids and break into
+     * pieces if needed.
+     * @param bulletBody
+     * @param asteroidBody
+     */
     private void bulletAsteroidCollision(Body bulletBody, Body asteroidBody) {
         AsteroidModel asteroidModel = (AsteroidModel) asteroidBody.getUserData();
         asteroidModel.setFlaggedForRemoval(true);
 
         if (asteroidModel.getSize() == AsteroidModel.AsteroidSize.BIG) {
-            AsteroidModel a1 = new AsteroidModel(asteroidModel.getX(), asteroidModel.getY(), asteroidModel.getRotation(), AsteroidModel.AsteroidSize.MEDIUM);
-            AsteroidModel a2 = new AsteroidModel(asteroidModel.getX(), asteroidModel.getY(), asteroidModel.getRotation(), AsteroidModel.AsteroidSize.MEDIUM);
-            AsteroidModel a3 = new AsteroidModel(asteroidModel.getX(), asteroidModel.getY(), asteroidModel.getRotation(), AsteroidModel.AsteroidSize.MEDIUM);
-
-            asteroidsToAdd.add(a1);
-            asteroidsToAdd.add(a2);
-            asteroidsToAdd.add(a3);
+            for (int i = 0; i < 5; i++)
+                asteroidsToAdd.add(new AsteroidModel(asteroidModel.getX(), asteroidModel.getY(), asteroidModel.getRotation(), AsteroidModel.AsteroidSize.MEDIUM));
         }
     }
 
+    /**
+     * Creates the asteroids that have been added in the previous
+     * simulation step.
+     */
     public void createNewAsteroids() {
         for (AsteroidModel asteroidModel : asteroidsToAdd) {
             model.addAsteroid(asteroidModel);
@@ -262,7 +282,5 @@ public class GameController implements ContactListener {
             }
         }
     }
-
-
 }
 
