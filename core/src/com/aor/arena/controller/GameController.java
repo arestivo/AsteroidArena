@@ -217,7 +217,7 @@ public class GameController implements ContactListener {
     }
 
     private void bulletCollision(Body bulletBody) {
-        ((BulletModel)bulletBody.getUserData()).flagForRemoval();
+        ((BulletModel)bulletBody.getUserData()).setFlaggedForRemoval(true);
     }
 
     private void bulletAsteroidCollision(Body bulletBody, Body asteroidBody) {

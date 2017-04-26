@@ -5,6 +5,7 @@ import com.aor.arena.model.entities.AsteroidModel;
 import com.aor.arena.model.entities.BulletModel;
 import com.aor.arena.model.entities.EntityModel;
 import com.aor.arena.model.entities.ShipModel;
+import com.badlogic.gdx.utils.Pool;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +26,21 @@ public class GameModel {
      * The asteroids roaming around in this game.
      */
     private List<AsteroidModel> asteroids;
+
+    /**
+     * The bullets currently flying through space.
+     */
     private List<BulletModel> bullets;
+
+    /**
+     * A pool of bullets
+     */
+    Pool<BulletModel> bulletPool = new Pool<BulletModel>() {
+        @Override
+        protected BulletModel newObject() {
+            return new BulletModel(0, 0, 0);
+        }
+    };
 
     /**
      * Constructs a game with a.space ship in a certain position and
@@ -76,7 +91,10 @@ public class GameModel {
     }
 
     public BulletModel createBullet(ShipModel ship) {
-        BulletModel bullet = new BulletModel(ship.getX() - (float)(Math.sin(ship.getRotation()) * 1.4), ship.getY() + (float)(Math.cos(ship.getRotation()) * 1.4), ship.getRotation());
+        BulletModel bullet = bulletPool.obtain();
+        bullet.setFlaggedForRemoval(false);
+        bullet.setPosition(ship.getX() - (float)(Math.sin(ship.getRotation()) * 1.4), ship.getY() + (float)(Math.cos(ship.getRotation()) * 1.4));
+        bullet.setRotation(ship.getRotation());
         bullets.add(bullet);
         return bullet;
     }
@@ -87,7 +105,9 @@ public class GameModel {
      * @param model the model to be removed
      */
     public void remove(EntityModel model) {
-        if (model instanceof BulletModel)
+        if (model instanceof BulletModel) {
             bullets.remove(model);
+            bulletPool.free((BulletModel) model);
+        }
     }
 }

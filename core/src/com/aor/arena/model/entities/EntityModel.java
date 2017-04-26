@@ -85,13 +85,18 @@ public abstract class EntityModel {
     }
 
     /**
-     * Makes this model flagged for removal on next step
+     * Returns if this entity has been flagged for removal
+     * 
+     * @return
      */
-    public void flagForRemoval() {
-        this.flaggedForRemoval = true;
-    };
-
     public boolean isFlaggedToBeRemoved() {
         return flaggedForRemoval;
+    }
+
+    /**
+     * Makes this model flagged for removal on next step
+     */
+    public void setFlaggedForRemoval(boolean flaggedForRemoval) {
+        this.flaggedForRemoval = flaggedForRemoval;
     }
 }
