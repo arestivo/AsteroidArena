@@ -24,6 +24,12 @@ import java.util.List;
 
 import static com.aor.arena.controller.GameController.ARENA_HEIGHT;
 import static com.aor.arena.controller.GameController.ARENA_WIDTH;
+import static com.aor.arena.model.entities.AsteroidModel.AsteroidSize.BIG;
+import static com.aor.arena.model.entities.AsteroidModel.AsteroidSize.MEDIUM;
+import static com.aor.arena.view.entities.ViewFactory.ViewType.BIGASTEROID;
+import static com.aor.arena.view.entities.ViewFactory.ViewType.BULLET;
+import static com.aor.arena.view.entities.ViewFactory.ViewType.MEDIUMASTEROID;
+import static com.aor.arena.view.entities.ViewFactory.ViewType.SHIP;
 
 /**
  * A view representing the game screen. Draws all the other views and
@@ -180,12 +186,12 @@ public class GameView extends ScreenAdapter {
     private void drawEntities() {
         List<AsteroidModel> asteroids = GameModel.getInstance().getAsteroids();
         for (AsteroidModel asteroid : asteroids) {
-            if (asteroid.getSize() == AsteroidModel.AsteroidSize.BIG) {
-                EntityView view = ViewFactory.makeView(game, ViewFactory.ViewType.BIGASTEROID);
+            if (asteroid.getSize() == BIG) {
+                EntityView view = ViewFactory.makeView(game, BIGASTEROID);
                 view.update(asteroid);
                 view.draw(game.getBatch());
-            } else if (asteroid.getSize() == AsteroidModel.AsteroidSize.MEDIUM) {
-                EntityView view = ViewFactory.makeView(game, ViewFactory.ViewType.MEDIUMASTEROID);
+            } else if (asteroid.getSize() == MEDIUM) {
+                EntityView view = ViewFactory.makeView(game, MEDIUMASTEROID);
                 view.update(asteroid);
                 view.draw(game.getBatch());
             }
@@ -193,12 +199,12 @@ public class GameView extends ScreenAdapter {
 
         List<BulletModel> bullets = GameModel.getInstance().getBullets();
         for (BulletModel bullet : bullets) {
-            EntityView view = ViewFactory.makeView(game, ViewFactory.ViewType.BULLET);
+            EntityView view = ViewFactory.makeView(game, BULLET);
             view.update(bullet);
             view.draw(game.getBatch());
         }
 
-        EntityView view = ViewFactory.makeView(game, ViewFactory.ViewType.SHIP);
+        EntityView view = ViewFactory.makeView(game, SHIP);
         view.update(GameModel.getInstance().getShip());
         view.draw(game.getBatch());
     }
