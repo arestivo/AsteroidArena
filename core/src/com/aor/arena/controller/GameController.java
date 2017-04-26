@@ -101,6 +101,8 @@ public class GameController implements ContactListener {
      * @param delta The size of this physics step in seconds.
      */
     public void update(float delta) {
+        model.update(delta);
+
         float frameTime = Math.min(delta, 0.25f);
         accumulator += frameTime;
         while (accumulator >= 1/60f) {

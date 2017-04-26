@@ -95,6 +95,7 @@ public class GameModel {
         bullet.setFlaggedForRemoval(false);
         bullet.setPosition(ship.getX() - (float)(Math.sin(ship.getRotation()) * 1.4), ship.getY() + (float)(Math.cos(ship.getRotation()) * 1.4));
         bullet.setRotation(ship.getRotation());
+        bullet.setTimeToLive(2);
         bullets.add(bullet);
         return bullet;
     }
@@ -114,7 +115,18 @@ public class GameModel {
         }
     }
 
+    /**
+     * Adds a new asteroid to the model
+     *
+     * @param asteroidModel the asteroid model to be added
+     */
     public void addAsteroid(AsteroidModel asteroidModel) {
         asteroids.add(asteroidModel);
+    }
+
+    public void update(float delta) {
+        for (BulletModel bullet : bullets)
+            if (bullet.decreaseTimeToLive(delta))
+                bullet.setFlaggedForRemoval(true);
     }
 }
