@@ -165,7 +165,9 @@ public class GameController {
         ((ShipModel)shipBody.getUserData()).setAccelerating(true);
     }
 
-    public void shoot(BulletModel bullet) {
-        new BulletBody(world, bullet);
+    public void shoot(GameModel model) {
+        BulletModel bullet = model.createBullet(model.getShip());
+        BulletBody body = new BulletBody(world, bullet);
+        body.setLinearVelocity(10);
     }
 }

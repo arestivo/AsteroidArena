@@ -112,6 +112,15 @@ public abstract class EntityBody {
     }
 
     /**
+     * Sets the angular velocity of this object in the direction it is rotated.
+     *
+     * @param velocity the new linear velocity angle for this body
+     */
+    public void setLinearVelocity(float velocity) {
+        body.setLinearVelocity((float)(velocity * -Math.sin(getAngle())), (float) (velocity * Math.cos(getAngle())));
+    }
+
+    /**
      * Wraps the setAngularVelocity method from the Box2D body class.
      *
      * @param omega the new angular velocity angle for this body

@@ -205,8 +205,7 @@ public class GameView extends ScreenAdapter {
             controller.accelerate(delta);
         }
         else if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
-            BulletModel bullet = model.createBullet(model.getShip());
-            controller.shoot(bullet);
+            controller.shoot(model);
         }
     }
 
