@@ -21,6 +21,7 @@ import com.badlogic.gdx.utils.Array;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.lang.Math.PI;
 import static java.lang.Math.cos;
 import static java.lang.Math.sin;
 
@@ -48,6 +49,16 @@ public class GameController implements ContactListener {
      * The acceleration impulse in newtons.
      */
     private static final float ACCELERATION_FORCE = 1000f;
+
+    /**
+     * The speed of bullets
+     */
+    private static final float BULLET_SPEED = 10f;
+
+    /**
+     * The number of fragments an asteroid breaks into
+     */
+    private static final int FRAGMENT_COUNT = 5;
 
     /**
      * The physics world controlled by this controller.
@@ -190,7 +201,7 @@ public class GameController implements ContactListener {
     public void shoot() {
         BulletModel bullet = model.createBullet(model.getShip());
         BulletBody body = new BulletBody(world, bullet);
-        body.setLinearVelocity(10);
+        body.setLinearVelocity(BULLET_SPEED);
     }
 
     /**
@@ -250,8 +261,8 @@ public class GameController implements ContactListener {
         asteroidModel.setFlaggedForRemoval(true);
 
         if (asteroidModel.getSize() == AsteroidModel.AsteroidSize.BIG) {
-            for (int i = 0; i < 5; i++)
-                asteroidsToAdd.add(new AsteroidModel(asteroidModel.getX(), asteroidModel.getY(), asteroidModel.getRotation(), AsteroidModel.AsteroidSize.MEDIUM));
+            for (int i = 0; i < FRAGMENT_COUNT; i++)
+                asteroidsToAdd.add(new AsteroidModel(asteroidModel.getX(), asteroidModel.getY(), (float) (asteroidModel.getRotation() * i * 2 * PI / 5), AsteroidModel.AsteroidSize.MEDIUM));
         }
     }
 
@@ -262,10 +273,10 @@ public class GameController implements ContactListener {
     public void createNewAsteroids() {
         for (AsteroidModel asteroidModel : asteroidsToAdd) {
             model.addAsteroid(asteroidModel);
-            if (asteroidModel.getSize() == AsteroidModel.AsteroidSize.BIG)
-                new MediumAsteroidBody(world, asteroidModel);
-            if (asteroidModel.getSize() == AsteroidModel.AsteroidSize.MEDIUM)
-                new MediumAsteroidBody(world, asteroidModel);
+            if (asteroidModel.getSize() == AsteroidModel.AsteroidSize.MEDIUM) {
+                MediumAsteroidBody body = new MediumAsteroidBody(world, asteroidModel);
+                body.setLinearVelocity((float) (Math.random() * 5));
+            }
         }
         asteroidsToAdd.clear();
     }

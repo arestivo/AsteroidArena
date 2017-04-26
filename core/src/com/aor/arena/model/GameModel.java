@@ -95,7 +95,7 @@ public class GameModel {
         bullet.setFlaggedForRemoval(false);
         bullet.setPosition(ship.getX() - (float)(Math.sin(ship.getRotation()) * 1.4), ship.getY() + (float)(Math.cos(ship.getRotation()) * 1.4));
         bullet.setRotation(ship.getRotation());
-        bullet.setTimeToLive(2);
+        bullet.setTimeToLive(1);
         bullets.add(bullet);
         return bullet;
     }
