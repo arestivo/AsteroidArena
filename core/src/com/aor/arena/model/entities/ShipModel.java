@@ -37,4 +37,9 @@ public class ShipModel extends EntityModel {
     public boolean isAccelerating() {
         return accelerating;
     }
+
+    @Override
+    public ModelType getType() {
+        return ModelType.SHIP;
+    }
 }

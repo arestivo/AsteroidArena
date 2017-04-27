@@ -5,6 +5,7 @@ import com.aor.arena.controller.GameController;
 import com.aor.arena.model.entities.AsteroidModel;
 import com.aor.arena.model.GameModel;
 import com.aor.arena.model.entities.BulletModel;
+import com.aor.arena.model.entities.ShipModel;
 import com.aor.arena.view.entities.BigAsteroidView;
 import com.aor.arena.view.entities.BulletView;
 import com.aor.arena.view.entities.EntityView;
@@ -186,26 +187,21 @@ public class GameView extends ScreenAdapter {
     private void drawEntities() {
         List<AsteroidModel> asteroids = GameModel.getInstance().getAsteroids();
         for (AsteroidModel asteroid : asteroids) {
-            if (asteroid.getSize() == BIG) {
-                EntityView view = ViewFactory.makeView(game, BIGASTEROID);
-                view.update(asteroid);
-                view.draw(game.getBatch());
-            } else if (asteroid.getSize() == MEDIUM) {
-                EntityView view = ViewFactory.makeView(game, MEDIUMASTEROID);
-                view.update(asteroid);
-                view.draw(game.getBatch());
-            }
+            EntityView view = ViewFactory.makeView(game, asteroid);
+            view.update(asteroid);
+            view.draw(game.getBatch());
         }
 
         List<BulletModel> bullets = GameModel.getInstance().getBullets();
         for (BulletModel bullet : bullets) {
-            EntityView view = ViewFactory.makeView(game, BULLET);
+            EntityView view = ViewFactory.makeView(game, bullet);
             view.update(bullet);
             view.draw(game.getBatch());
         }
 
-        EntityView view = ViewFactory.makeView(game, SHIP);
-        view.update(GameModel.getInstance().getShip());
+        ShipModel ship = GameModel.getInstance().getShip();
+        EntityView view = ViewFactory.makeView(game, ship);
+        view.update(ship);
         view.draw(game.getBatch());
     }
 

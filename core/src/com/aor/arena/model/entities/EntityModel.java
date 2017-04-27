@@ -1,9 +1,13 @@
 package com.aor.arena.model.entities;
 
+import com.aor.arena.view.entities.ViewFactory;
+
 /**
  * An abstract model representing an entity belonging to a game model.
  */
 public abstract class EntityModel {
+    public enum ModelType {BIGASTEROID, MEDIUMASTEROID, SHIP, BULLET};
+
     /**
      * The x-coordinate of this model in meters.
      */
@@ -86,7 +90,7 @@ public abstract class EntityModel {
 
     /**
      * Returns if this entity has been flagged for removal
-     * 
+     *
      * @return
      */
     public boolean isFlaggedToBeRemoved() {
@@ -99,4 +103,6 @@ public abstract class EntityModel {
     public void setFlaggedForRemoval(boolean flaggedForRemoval) {
         this.flaggedForRemoval = flaggedForRemoval;
     }
+
+    public abstract ModelType getType();
 }

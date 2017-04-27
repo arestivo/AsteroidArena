@@ -35,4 +35,9 @@ public class BulletModel extends EntityModel{
     public void setTimeToLive(float timeToLive) {
         this.timeToLive = timeToLive;
     }
+
+    @Override
+    public ModelType getType() {
+        return ModelType.BULLET;
+    }
 }

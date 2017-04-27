@@ -35,4 +35,15 @@ public class AsteroidModel extends EntityModel{
     public AsteroidSize getSize() {
         return size;
     }
+
+    @Override
+    public ModelType getType() {
+        if (size == AsteroidSize.BIG)
+            return ModelType.BIGASTEROID;
+        if (size == AsteroidSize.MEDIUM)
+            return ModelType.MEDIUMASTEROID;
+        return null;
+    }
+
 }
+
