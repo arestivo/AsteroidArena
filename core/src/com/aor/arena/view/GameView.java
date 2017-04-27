@@ -25,12 +25,6 @@ import java.util.List;
 
 import static com.aor.arena.controller.GameController.ARENA_HEIGHT;
 import static com.aor.arena.controller.GameController.ARENA_WIDTH;
-import static com.aor.arena.model.entities.AsteroidModel.AsteroidSize.BIG;
-import static com.aor.arena.model.entities.AsteroidModel.AsteroidSize.MEDIUM;
-import static com.aor.arena.view.entities.ViewFactory.ViewType.BIGASTEROID;
-import static com.aor.arena.view.entities.ViewFactory.ViewType.BULLET;
-import static com.aor.arena.view.entities.ViewFactory.ViewType.MEDIUMASTEROID;
-import static com.aor.arena.view.entities.ViewFactory.ViewType.SHIP;
 
 /**
  * A view representing the game screen. Draws all the other views and
