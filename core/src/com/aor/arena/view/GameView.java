@@ -173,6 +173,18 @@ public class GameView extends ScreenAdapter {
         if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
             GameController.getInstance().shoot();
         }
+        if (Gdx.input.getGyroscopeX() > 0) {
+            GameController.getInstance().rotateRight(delta * Gdx.input.getGyroscopeX());
+        }
+        if (Gdx.input.getGyroscopeX() < 0) {
+            GameController.getInstance().rotateLeft(delta * -Gdx.input.getGyroscopeX());
+        }
+        if (Gdx.input.isTouched()) {
+            if (Gdx.input.getX() < Gdx.graphics.getWidth() / 2)
+                GameController.getInstance().accelerate(delta);
+            else
+                GameController.getInstance().shoot();
+        }
     }
 
     /**

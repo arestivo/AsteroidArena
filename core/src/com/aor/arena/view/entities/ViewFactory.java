@@ -21,10 +21,14 @@ public class ViewFactory {
 
     public static EntityView makeView(AsteroidArena game, EntityModel model) {
         if (!cache.containsKey(model.getType())) {
-            if (model.getType() == BIGASTEROID) cache.put(model.getType(), new BigAsteroidView(game));
-            if (model.getType() == MEDIUMASTEROID) cache.put(model.getType(), new MediumAsteroidView(game));
-            if (model.getType() == SHIP) cache.put(model.getType(), new ShipView(game));
-            if (model.getType() == BULLET) cache.put(model.getType(), new BulletView(game));
+            if (model.getType() == BIGASTEROID)
+                cache.put(model.getType(), new BigAsteroidView(game));
+            if (model.getType() == MEDIUMASTEROID)
+                cache.put(model.getType(), new MediumAsteroidView(game));
+            if (model.getType() == SHIP)
+                cache.put(model.getType(), new ShipView(game));
+            if (model.getType() == BULLET)
+                cache.put(model.getType(), new BulletView(game));
         }
         return cache.get(model.getType());
     }
