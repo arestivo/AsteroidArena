@@ -45,7 +45,7 @@ public class GameView extends ScreenAdapter {
      * The width of the viewport in meters. The height is
      * automatically calculated using the screen ratio.
      */
-    private static final float VIEWPORT_WIDTH = 20;
+    private static final float VIEWPORT_WIDTH = 30;
 
     /**
      * The game this screen belongs to.

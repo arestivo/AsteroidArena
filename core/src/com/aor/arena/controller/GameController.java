@@ -68,7 +68,7 @@ public class GameController implements ContactListener {
     /**
      * Minimum time between consecutive shots in seconds
      */
-    private static final float TIME_BETWEEN_SHOTS = .2f;
+    private static final float TIME_BETWEEN_SHOTS = .1f;
 
     /**
      * The physics world controlled by this controller.
